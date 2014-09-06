@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html ng-app='store'>
+<head>
+	<meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<script type='text/javascript' src='app.js'></script>
+	<title>Angular</title>
+</head>
+<body ng-controller='StoreController'>
+	<div ng-repeat='product in products | orderBy: "-price"'>
+		<div ng-hide='product.soldOut'>
+			<product-title></product-title>	
+
+			<section ng-init='tab = 1' ng-controller='PanelController'>
+				<ul class='nav nav-pills'>
+					<li ng-class='{ active:isSelected(1) }'> 
+						<a href ng-click='selectTab(1)'>Description</a> 
+					</li>
+					<li ng-class='{ active:isSelected(2) }'> 
+						<a href ng-click='selectTab(2)'>Specifications</a> 
+					</li>
+					<li ng-class='{ active:isSelected(3) }'> 
+						<a href ng-click='selectTab(3)'>Reviews</a> 
+					</li>
+				</ul>
+			
+				<div class='panel' ng-show='isSelected(1)'>
+					<h4>Description</h4>
+					<p>{{ product.description }}</p>
+				</div>
+				<div class='panel' ng-show='isSelected(2)'>
+					<h4>Specifications</h4>
+					<p>None yet.</p>
+				</div>
+				<div class='panel' ng-show='isSelected(3)'>
+					<h4>Reviews</h4>
+
+					<form style='width: 50%;'role='form' name="reviewForm" ng-controller='ReviewController' ng-submit='reviewForm.$valid && addReview(product)' novalidate>
+
+						<blockquote ng-repeat='review in product.reviews'>
+							<b>Stars: {{ review.stars }}</b><br>
+							{{ review.body }} <br>
+							<cite>by: {{ review.author }}</cite>
+						</blockquote>
+
+						<blockquote>
+							<b>Stars: {{ review.stars }}</b><br>
+							{{ review.body }} <br>
+							<cite>by: {{ review.author }}</cite>
+						</blockquote>
+						<div class='form-group'>
+							<select class='form-control' ng-model='review.stars' ng-options='stars for stars in [5,4,3,2,1]' required>
+								<option value="">Rate the product</option>
+							</select>
+						</div>
+						<div class='form-group'>
+							<label>Review</label>
+							<textarea class='form-control' ng-model='review.body' required></textarea>
+						</div>
+						<div class='form-group'>
+							<label>Email</label>
+							<input class='form-control' type="email" ng-model='review.author' required/>
+						</div>
+						<input class='btn btn-default' type="submit" value='Submit' />
+					</form>
+				</div>
+			</section>
+			
+		</div>
+	</div>
+</body>
+</html>
+
+<style>
+	.ng-invalid.ng-dirty {
+		border-color: #FA787E;
+	}
+
+	.ng-valid.ng-dirty {
+		border-color: #78FA89;
+	}
+</style>
